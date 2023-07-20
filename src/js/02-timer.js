@@ -1,7 +1,8 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-
+const buttonStart = document.querySelector('[data-start]');
+ buttonStart.disabled = false;
 
 
 flatpickr("#datetime-picker", {
@@ -10,11 +11,12 @@ flatpickr("#datetime-picker", {
   defaultDate: new Date(),
   minuteIncrement: 1,
     onClose(selectedDates) {
-         const currentDate = this.config.defaultDate;
-        for (let i = 0; i < selectedDates.length; i += 1) {
-            if (selectedDates[0] < currentDate) {
+        const currentDate = this.config.defaultDate;
+    if (selectedDates[0] < currentDate) {
                 window.alert("Please choose a date in the future"); 
-          } 
+        //     } else {
+        //         buttonStart.disabled = true;
+        //   }
       }
     console.log(selectedDates[0]);
     }

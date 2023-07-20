@@ -14,7 +14,7 @@ flatpickr("#datetime-picker", {
     onClose(selectedDates) {
     if (selectedDates[0] < currentDate) {
                 window.alert("Please choose a date in the future"); 
-            } else {
+            } else if (selectedDates[0] < currentDate){
                 buttonStart.disabled = true;
           }
     console.log(selectedDates[0]);

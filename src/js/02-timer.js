@@ -1,3 +1,4 @@
+
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -14,7 +15,7 @@ flatpickr("#datetime-picker", {
     onClose(selectedDates) {
     if (selectedDates[0] < currentDate) {
                 window.alert("Please choose a date in the future"); 
-            } else if (selectedDates[0] < currentDate){
+            } else if (selectedDates[0] > currentDate){
                 buttonStart.disabled = true;
           }
     console.log(selectedDates[0]);

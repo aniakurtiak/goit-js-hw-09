@@ -5,7 +5,7 @@ import "flatpickr/dist/flatpickr.min.css";
 const selectors = {
     days: document.querySelector('[data-days]'),
     hours: document.querySelector('[data-hours]'),
-    minetus: document.querySelector('[data-minutes]'),
+    minutes: document.querySelector('[data-minutes]'),
     seconds: document.querySelector('[data-seconds]'),
     buttonStart: document.querySelector('[data-start]'),
 }

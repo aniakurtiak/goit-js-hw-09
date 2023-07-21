@@ -5,12 +5,12 @@ import "flatpickr/dist/flatpickr.min.css";
 const buttonStart = document.querySelector('[data-start]');
 //  buttonStart.disabled = true;
 
-// const currentDate = new Date();
+let currentDate = new Date();
 
 flatpickr("#datetime-picker", {
     enableTime: true,
   time_24hr: true,
-  defaultDate: new Date(),
+  defaultDate: currentDate,
   minuteIncrement: 1,
     onClose(selectedDates) {
     // if (selectedDates[0] < currentDate) {

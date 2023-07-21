@@ -6,11 +6,15 @@ const buttonStart = document.querySelector('[data-start]');
  buttonStart.disabled = true;
 
 let currentDate = new Date();
+function getCopyOfCurrentDate() {
+  const currentDate = new Date();
+  return new Date(currentDate.getTime());
+}
 
 flatpickr("#datetime-picker", {
     enableTime: true,
     time_24hr: true,
-    defaultDate: currentDate,
+    defaultDate: getCopyOfCurrentDate(),
     minuteIncrement: 1,
     onClose(selectedDates) {
         if (selectedDates[0] < currentDate) {

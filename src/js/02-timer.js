@@ -13,11 +13,12 @@ flatpickr("#datetime-picker", {
   defaultDate: new Date(),
   minuteIncrement: 1,
     onClose(selectedDates) {
-    if (selectedDates[0] < currentDate) {
-                window.alert("Please choose a date in the future"); 
-            } else if (selectedDates[0] > currentDate){
-                buttonStart.disabled = false;
-          }
+    if (selectedDates[0] > currentDate) {
+      buttonStart.disabled = false; 
+    } else {
+      buttonStart.disabled = true;
+      window.alert("Please choose a date in the future");
+    }
     console.log(selectedDates[0]);
     }
 });

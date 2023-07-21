@@ -5,7 +5,7 @@ import "flatpickr/dist/flatpickr.min.css";
 const buttonStart = document.querySelector('[data-start]');
 //  buttonStart.disabled = true;
 
-const currentDate = new Date();
+// const currentDate = new Date();
 
 flatpickr("#datetime-picker", {
     enableTime: true,

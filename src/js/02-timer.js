@@ -19,14 +19,5 @@ flatpickr("#datetime-picker", {
         } else if (selectedDates[0] > this.config.defaultDate) {
             buttonStart.disabled = false;
         }
-    
-        // if (selectedDates[0] > currentDate) {
-        //   buttonStart.disabled = false; 
-        // } else {
-        //   buttonStart.disabled = true;
-        //   window.alert("Please choose a date in the future");
-        // }
-        // console.log(selectedDates[0]);
-        // }
     }
 });

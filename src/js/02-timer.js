@@ -28,7 +28,6 @@ flatpickr("#datetime-picker", {
 
 let countdownIntervalId;
 
-
 selectors.buttonStart.addEventListener('click', handlerClick);
 function handlerClick(evt) {
 const selectedDate = flatpickr("#datetime-picker").selectedDates[0];

@@ -2,6 +2,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+
     function convertMs(ms) {
       // Кількість мілісекунд у одиниці часу
       const second = 1000;
@@ -25,7 +26,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
     function addLeadingZero(value) {
       return value.toString().padStart(2, '0');
     }
-
+let timerInterval;
     // Функція, яка оновлює таймер і викликається кожну секунду
     function updateTimer(endDate) {
       const currentTime = new Date().getTime();

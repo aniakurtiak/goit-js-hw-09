@@ -59,12 +59,10 @@ function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
 
-document.addEventListener("click", handlerClick);
-  function handlerClick(evt) {
-  if (evt.target === selectors.startButton) {
-    selectors.startButton.disabled = true;
+selectors.startButton.addEventListener("click", handlerClick);
+  function handlerClick(event) {
+     selectors.startButton.disabled = true;
   startTimer();
-  }
 };
 
 const options = {

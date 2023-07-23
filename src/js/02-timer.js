@@ -19,26 +19,20 @@ flatpickr("#datetime-picker", {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] < this.config.defaultDate) {
+    const selectedDate = selectedDates[0];
+    const currentDate = new Date();
+    currentDate.setMilliseconds(0); // Обнуляємо мілісекунди для точного порівняння
+
+    if (selectedDate < currentDate) {
       window.alert("Please choose a date in the future");
-    } else if (selectedDates[0] > this.config.defaultDate) {
+    } else if (selectedDate > currentDate) {
       selectors.buttonStart.disabled = false;
     } else {
-      const now = new Date();
-      const selectedDate = selectedDates[0];
-      if (selectedDate > now) {
-        const timeRemaining = selectedDate - now;
-        selectors.buttonStart.disabled = false;
-        clearInterval(countdownIntervalId);
-        countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-        updateCountdown(timeRemaining); 
-      } else {
-        const timeRemaining = selectedDate - now;
-        selectors.buttonStart.disabled = false;
-        clearInterval(countdownIntervalId);
-        countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-        updateCountdown(timeRemaining); 
-      }
+      const timeRemaining = selectedDate - currentDate;
+      selectors.buttonStart.disabled = false;
+      clearInterval(countdownIntervalId);
+      countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
+      updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
     }
   },
 });
@@ -52,7 +46,7 @@ function startCountdown() {
     const timeRemaining = selectedDate - new Date();
     clearInterval(countdownIntervalId);
     countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-    updateCountdown(timeRemaining); 
+    updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
   }
 }
 
@@ -74,3 +68,20 @@ function displayCountdown(days, hours, minutes, seconds) {
   selectors.seconds.textContent = addLeadingZero(seconds);
 }
 
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}

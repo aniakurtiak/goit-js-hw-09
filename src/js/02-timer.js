@@ -1,6 +1,3 @@
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
-
 function addLeadingZero(value) {
       return value.toString().padStart(2, '0');
     }
@@ -55,27 +52,31 @@ function addLeadingZero(value) {
 
       startButton.addEventListener("click", function () {
         const selectedDate = new Date(datePicker.value).getTime();
-        const currentDate = new Date().getTime();
-        const timeRemaining = selectedDate - currentDate;
 
-        if (timeRemaining <= 0) {
-          clearInterval(countdownInterval);
-          return;
-        }
+        function updateTimer() {
+          const currentDate = new Date().getTime();
+          const timeRemaining = selectedDate - currentDate;
 
-        countdownInterval = setInterval(() => {
+          if (timeRemaining <= 0) {
+            clearInterval(countdownInterval);
+            startButton.disabled = true;
+            return;
+          }
+
           const time = convertMs(timeRemaining);
           daysValue.textContent = addLeadingZero(time.days);
           hoursValue.textContent = addLeadingZero(time.hours);
           minutesValue.textContent = addLeadingZero(time.minutes);
           secondsValue.textContent = addLeadingZero(time.seconds);
 
-          timeRemaining -= 1000;
+          requestAnimationFrame(updateTimer);
+        }
 
-          if (timeRemaining <= 0) {
-            clearInterval(countdownInterval);
-            startButton.disabled = true;
-          }
-        }, 1000);
+        updateTimer();
       });
     });
+
+
+
+
+

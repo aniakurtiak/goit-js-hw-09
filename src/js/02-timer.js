@@ -20,19 +20,11 @@ flatpickr("#datetime-picker", {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-    const currentDate = new Date();
-    currentDate.setMilliseconds(0); // Обнуляємо мілісекунди для точного порівняння
-
-    if (selectedDate < currentDate) {
-      window.alert("Please choose a date in the future");
-    } else if (selectedDate > currentDate) {
-      selectors.buttonStart.disabled = false;
+    if (selectedDate <= new Date()) {
+      window.alert("Please choose a date and time in the future");
+      selectors.buttonStart.disabled = true;
     } else {
-      const timeRemaining = selectedDate - currentDate;
       selectors.buttonStart.disabled = false;
-      clearInterval(countdownIntervalId);
-      countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-      updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
     }
   },
 });
@@ -43,17 +35,19 @@ function startCountdown() {
   const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
   if (selectedDate) {
     selectors.buttonStart.disabled = true;
-    const timeRemaining = selectedDate - new Date();
     clearInterval(countdownIntervalId);
-    countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-    updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
+    countdownIntervalId = setInterval(() => updateCountdown(selectedDate), 1000);
+    updateCountdown(selectedDate); // Викликаємо один раз, щоб відображення було зразу
   }
 }
 
-function updateCountdown(timeRemaining) {
+function updateCountdown(selectedDate) {
+  const timeRemaining = selectedDate - new Date();
+
   if (timeRemaining <= 0) {
     clearInterval(countdownIntervalId);
     displayCountdown(0, 0, 0, 0);
+    selectors.buttonStart.disabled = false;
     return;
   }
 

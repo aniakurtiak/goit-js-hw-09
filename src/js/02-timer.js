@@ -40,15 +40,14 @@ function startCountdown() {
   if (selectedDate) {
     const currentDate = new Date();
     currentDate.setSeconds(0); // Обнулюємо секунди для поточного часу
-    if (selectedDate <= currentDate) {
-      window.alert("Please choose a date and time in the future");
+    if (selectedDate > currentDate) { // Змінили умову перевірки тут
       selectors.buttonStart.disabled = true;
-      return;
+      clearInterval(countdownIntervalId);
+      countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);
+      updateCountdown(selectedDate); // Викликаємо один раз, щоб не очікувати секунду до першого оновлення
+    } else {
+      window.alert("Please choose a date and time in the future");
     }
-    selectors.buttonStart.disabled = true;
-    clearInterval(countdownIntervalId);
-    countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);
-    updateCountdown(selectedDate); // Викликаємо один раз, щоб не очікувати секунду до першого оновлення
   }
 }
 

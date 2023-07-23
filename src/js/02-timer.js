@@ -1,12 +1,14 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-const datePicker = document.getElementById("datetime-picker");
-      const startButton = document.querySelector("[data-start]");
-      const daysValue = document.querySelector("[data-days]");
-      const hoursValue = document.querySelector("[data-hours]");
-      const minutesValue = document.querySelector("[data-minutes]");
-      const secondsValue = document.querySelector("[data-seconds]");
+const selectors = {
+  datePicker: document.getElementById("datetime-picker"),
+  startButton: document.querySelector("[data-start]"),
+  daysValue: document.querySelector("[data-days]"),
+  hoursValue: document.querySelector("[data-hours]"),
+  minutesValue: document.querySelector("[data-minutes]"),
+  secondsValue: document.querySelector("[data-seconds]"),
+}
 
 const options = {
       enableTime: true,
@@ -17,9 +19,9 @@ const options = {
         const selectedDate = selectedDates[0];
         if (selectedDate < new Date()) {
           window.alert("Please choose a date in the future");
-          startButton.disabled = true;
+          selectors.startButton.disabled = true;
         } else {
-          startButton.disabled = false;
+          selectors.startButton.disabled = false;
         }
       },
     };
@@ -28,8 +30,8 @@ const options = {
 
 document.addEventListener("click", handlerClick);
 function handlerClick(event) {
-      if (event.target === startButton) {
-        const selectedDate = new Date(datePicker.value).getTime();
+      if (event.target === selectors.startButton) {
+        const selectedDate = new Date(selectors.datePicker.value).getTime();
 
         function updateTimer() {
           const currentDate = new Date().getTime();
@@ -37,15 +39,15 @@ function handlerClick(event) {
 
           if (timeRemaining <= 0) {
             clearInterval(countdownInterval);
-            startButton.disabled = true;
+            selectors.startButton.disabled = true;
             return;
           }
 
           const time = convertMs(timeRemaining);
-          daysValue.textContent = addLeadingZero(time.days);
-          hoursValue.textContent = addLeadingZero(time.hours);
-          minutesValue.textContent = addLeadingZero(time.minutes);
-          secondsValue.textContent = addLeadingZero(time.seconds);
+          selectors.daysValue.textContent = addLeadingZero(time.days);
+          selectors.hoursValue.textContent = addLeadingZero(time.hours);
+          selectors.minutesValue.textContent = addLeadingZero(time.minutes);
+          selectors.secondsValue.textContent = addLeadingZero(time.seconds);
 
           requestAnimationFrame(updateTimer);
         }
@@ -72,8 +74,6 @@ function handlerClick(event) {
 
       return { days, hours, minutes, seconds };
     }
-
-
 
      function addLeadingZero(value) {
       return value.toString().padStart(2, '0');

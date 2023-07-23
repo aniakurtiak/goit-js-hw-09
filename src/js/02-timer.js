@@ -20,7 +20,7 @@ function startTimer() {
     const timeRemaining = selectedDate - currentDate;
 
     if (timeRemaining <= 0) {
-      clearInterval(countdownInterval);
+      // clearInterval(countdownInterval);
       selectors.startButton.disabled = true;
       return;
     }

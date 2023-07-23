@@ -20,7 +20,7 @@ function startTimer() {
     const timeRemaining = selectedDate - currentDate;
 
     if (timeRemaining <= 0) {
-      // clearInterval(countdownInterval);
+      clearInterval(countdownInterval);
       selectors.startButton.disabled = true;
       return;
     }
@@ -59,16 +59,13 @@ function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
 
-function handleStartButtonClick() {
-  selectors.startButton.disabled = true;
+document.addEventListener("click", handlerClick);
+  function handlerClick(evt) {
+  if (evt.target === selectors.startButton) {
+    selectors.startButton.disabled = true;
   startTimer();
-}
-
-document.addEventListener("click", function (event) {
-  if (event.target === selectors.startButton) {
-    handleStartButtonClick();
   }
-});
+};
 
 const options = {
   enableTime: true,

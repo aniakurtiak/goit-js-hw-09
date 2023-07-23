@@ -1,51 +1,84 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const selectors = {
-  days: document.querySelector('[data-days]'),
-  hours: document.querySelector('[data-hours]'),
-  minutes: document.querySelector('[data-minutes]'),
-  seconds: document.querySelector('[data-seconds]'),
-  buttonStart: document.querySelector('[data-start]'),
-};
+    function convertMs(ms) {
+      // Кількість мілісекунд у одиниці часу
+      const second = 1000;
+      const minute = second * 60;
+      const hour = minute * 60;
+      const day = hour * 24;
 
-selectors.buttonStart.disabled = true;
+      // Залишок днів
+      const days = Math.floor(ms / day);
+      // Залишок годин
+      const hours = Math.floor((ms % day) / hour);
+      // Залишок хвилин
+      const minutes = Math.floor(((ms % day) % hour) / minute);
+      // Залишок секунд
+      const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-let countdownIntervalId;
-
-flatpickr("#datetime-picker", {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose(selectedDates) {
-    const selectedDate = selectedDates[0];
-    const currentDate = new Date();
-    if (selectedDate <= currentDate) {
-      window.alert("Please choose a date and time in the future");
-      selectors.buttonStart.disabled = true;
-    } else {
-      selectors.buttonStart.disabled = false;
+      return { days, hours, minutes, seconds };
     }
-  },
-});
 
-selectors.buttonStart.addEventListener('click', startCountdown);
+    // Додає ведучий нуль до чисел менших 10
+    function addLeadingZero(value) {
+      return value.toString().padStart(2, '0');
+    }
 
-function startCountdown() {
-  const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
-  const currentDate = new Date();
-  
-  if (selectedDate && selectedDate > currentDate) {
-    selectors.buttonStart.disabled = true;
-    clearInterval(countdownIntervalId);
-    countdownIntervalId = setInterval(() => updateCountdown(selectedDate), 1000);
-    updateCountdown(selectedDate); // Викликаємо один раз, щоб відображення було зразу
-  } else {
-    window.alert("Please choose a date and time in the future");
-  }
-}
+    // Функція, яка оновлює таймер і викликається кожну секунду
+    function updateTimer(endDate) {
+      const currentTime = new Date().getTime();
+      const timeLeft = endDate - currentTime;
 
-function updateCountdown(selectedDate) {
-  const timeRemaining = selectedDate - new Date();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('start-btn').disabled = false;
+        return;
+      }
 
+      const { days, hours, minutes, seconds } = convertMs(timeLeft);
+
+      const formattedTime = `${addLeadingZero(days)}:${addLeadingZero(hours)}:${addLeadingZero(minutes)}:${addLeadingZero(seconds)}`;
+      document.getElementById('timer').textContent = formattedTime;
+    }
+
+    // Обробник кліку на кнопку "Start"
+    function startTimer() {
+      const selectedDate = new Date(document.getElementById('datetime-picker').value).getTime();
+      const currentDate = new Date().getTime();
+
+      if (selectedDate <= currentDate) {
+        // Вибрано неприпустиму дату
+        Notify.failure('Please choose a date in the future');
+        return;
+      }
+
+      document.getElementById('start-btn').disabled = true;
+
+      const endDate = new Date(selectedDate);
+      // Оновлювати таймер кожну секунду
+      timerInterval = setInterval(() => updateTimer(endDate), 1000);
+
+      Notify.success('Timer started!');
+    }
+
+    // Ініціалізація бібліотеки flatpickr
+    const picker = flatpickr("#datetime-picker", {
+      enableTime: true,
+      time_24hr: true,
+      defaultDate: new Date(),
+      minuteIncrement: 1,
+      onClose(selectedDates) {
+        const selectedDate = new Date(selectedDates[0]).getTime();
+        const currentDate = new Date().getTime();
+        if (selectedDate > currentDate) {
+          document.getElementById('start-btn').disabled = false;
+        } else {
+          document.getElementById('start-btn').disabled = true;
+        }
+      },
+    });
+
+    // Додавання обробника кліку на кнопку "Start"
+    document.getElementById('start-btn').addEventListener('click', startTimer);

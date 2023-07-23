@@ -23,14 +23,14 @@ flatpickr("#datetime-picker", {
         } else if (selectedDates[0] > this.config.defaultDate) {
             selectors.buttonStart.disabled = false;
         } else {
-          selectors.buttonStart.disabled = true;
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
-      setTimeout(() => {
-        startCountdown();
+          const selectedDateTime = selectedDates[0].getTime();
+      const now = new Date().getTime();
+      if (selectedDateTime > now) {
         selectors.buttonStart.disabled = false;
-      }, tomorrow - new Date());
+        updateCountdown(selectedDates[0]);
+      } else {
+        window.alert("Please choose a future date and time");
+      }
         }
     }
 });

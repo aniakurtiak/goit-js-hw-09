@@ -18,7 +18,7 @@ form.addEventListener('submit', handlerSubmit);
 function handlerSubmit(evt) {
   evt.preventDefault();
   const formData = new FormData(evt.target);
-    const firstDelay = Number(formData.get("delay"));
+    let firstDelay = Number(formData.get("delay"));
     const step = Number(formData.get("step"));
     const amount = Number(formData.get("amount"));
 

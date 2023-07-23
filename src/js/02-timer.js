@@ -20,7 +20,7 @@ flatpickr("#datetime-picker", {
     const selectedDate = selectedDates[0];
     if (selectedDate) {
       const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); // Встановлюємо початок дня для поточної дати
+      currentDate.setSeconds(0); // Обнулюємо секунди для поточного часу
       if (selectedDate <= currentDate) {
         window.alert("Please choose a date and time in the future");
         selectors.buttonStart.disabled = true;

@@ -22,6 +22,15 @@ flatpickr("#datetime-picker", {
             window.alert("Please choose a date in the future");
         } else if (selectedDates[0] > this.config.defaultDate) {
             selectors.buttonStart.disabled = false;
+        } else {
+          selectors.buttonStart.disabled = true;
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      setTimeout(() => {
+        startCountdown();
+        selectors.buttonStart.disabled = false;
+      }, tomorrow - new Date());
         }
     }
 });
@@ -35,7 +44,7 @@ const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
     selectors.buttonStart.disabled = true;
     clearInterval(countdownIntervalId);
     countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);
-    updateCountdown(selectedDate); // Викликаємо один раз, щоб не очікувати секунду до першого оновлення
+    updateCountdown(selectedDate); 
   }
 }
 function updateCountdown(targetDate) {

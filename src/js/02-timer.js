@@ -20,8 +20,9 @@ flatpickr("#datetime-picker", {
     const selectedDate = selectedDates[0];
     if (selectedDate) {
       const currentDate = new Date();
-      currentDate.setSeconds(0); // Обнулюємо секунди для поточного часу
-      if (selectedDate <= currentDate) {
+      const selectedDateWithoutTime = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+      const currentWithoutTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+      if (selectedDateWithoutTime <= currentWithoutTime) {
         window.alert("Please choose a date and time in the future");
         selectors.buttonStart.disabled = true;
       } else {
@@ -39,8 +40,7 @@ function startCountdown() {
   const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
   if (selectedDate) {
     const currentDate = new Date();
-    currentDate.setSeconds(0); // Обнулюємо секунди для поточного часу
-    if (selectedDate > currentDate) { // Змінили умову перевірки тут
+    if (selectedDate > currentDate) {
       selectors.buttonStart.disabled = true;
       clearInterval(countdownIntervalId);
       countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);

@@ -22,12 +22,12 @@ flatpickr("#datetime-picker", {
     } else if (selectedDates[0] > this.config.defaultDate) {
       selectors.buttonStart.disabled = false;
     } else {
-      // If the selected date is today and has time, start the countdown
-      const selectedDateTime = selectedDates[0].getTime();
-      const now = new Date().getTime();
-      if (selectedDateTime > now) {
+      const now = new Date();
+      const selectedDate = selectedDates[0];
+      if (selectedDate > now) {
+        const timeRemaining = selectedDate - now;
         selectors.buttonStart.disabled = false;
-        updateCountdown(selectedDates[0]);
+        updateCountdown(timeRemaining);
       } else {
         window.alert("Please choose a future date and time");
       }
@@ -44,13 +44,13 @@ function startCountdown() {
   if (selectedDate) {
     selectors.buttonStart.disabled = true;
     clearInterval(countdownIntervalId);
-    countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);
-    updateCountdown(selectedDate); // Викликаємо один раз, щоб не очікувати секунду до першого оновлення
+    const timeRemaining = selectedDate - new Date();
+    countdownIntervalId = setInterval(updateCountdown, 1000, timeRemaining);
+    updateCountdown(timeRemaining);
   }
 }
 
-function updateCountdown(targetDate) {
-  const timeRemaining = targetDate - new Date();
+function updateCountdown(timeRemaining) {
   if (timeRemaining <= 0) {
     clearInterval(countdownIntervalId);
     displayCountdown(0, 0, 0, 0);

@@ -17,10 +17,16 @@ flatpickr("#datetime-picker", {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] < this.config.defaultDate) {
-      window.alert("Please choose a date in the future");
-    } else if (selectedDates[0] > this.config.defaultDate) {
-      selectors.buttonStart.disabled = false;
+    const selectedDate = selectedDates[0];
+    if (selectedDate) {
+      const currentDate = new Date();
+      currentDate.setHours(23, 59, 59, 999); // Встановлюємо максимальний час для поточної дати
+      if (selectedDate <= currentDate) {
+        window.alert("Please choose a date and time in the future");
+        selectors.buttonStart.disabled = true;
+      } else {
+        selectors.buttonStart.disabled = false;
+      }
     }
   },
 });

@@ -51,7 +51,7 @@ let timerInterval;
 
       if (selectedDate <= currentDate) {
         // Вибрано неприпустиму дату
-        Notify.failure('Please choose a date in the future');
+        Notiflix.Notify.failure('Please choose a date in the future');
         return;
       }
 
@@ -61,7 +61,7 @@ let timerInterval;
       // Оновлювати таймер кожну секунду
       timerInterval = setInterval(() => updateTimer(endDate), 1000);
 
-      Notify.success('Timer started!');
+      Notiflix.Notify.success('Timer started!');
     }
 
     // Ініціалізація бібліотеки flatpickr

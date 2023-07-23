@@ -28,7 +28,7 @@ const options = {
   },
 };
 
-flatpickr("#datetime-picker", options);
+
 
 let countdownInterval;
 
@@ -85,3 +85,4 @@ function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
 
+flatpickr("#datetime-picker", options);

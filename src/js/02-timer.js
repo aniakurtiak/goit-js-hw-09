@@ -1,85 +1,77 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+const selectors = {
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]'),
+  buttonStart: document.querySelector('[data-start]'),
+};
 
-    function convertMs(ms) {
-      // Кількість мілісекунд у одиниці часу
-      const second = 1000;
-      const minute = second * 60;
-      const hour = minute * 60;
-      const day = hour * 24;
+selectors.buttonStart.disabled = true;
 
-      // Залишок днів
-      const days = Math.floor(ms / day);
-      // Залишок годин
-      const hours = Math.floor((ms % day) / hour);
-      // Залишок хвилин
-      const minutes = Math.floor(((ms % day) % hour) / minute);
-      // Залишок секунд
-      const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-      return { days, hours, minutes, seconds };
+flatpickr("#datetime-picker", {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    if (selectedDates[0] < this.config.defaultDate) {
+      window.alert("Please choose a date in the future");
+    } else if (selectedDates[0] > this.config.defaultDate) {
+      selectors.buttonStart.disabled = false;
     }
+  },
+});
 
-    // Додає ведучий нуль до чисел менших 10
-    function addLeadingZero(value) {
-      return value.toString().padStart(2, '0');
-    }
-let timerInterval;
-    // Функція, яка оновлює таймер і викликається кожну секунду
-    function updateTimer(endDate) {
-      const currentTime = new Date().getTime();
-      const timeLeft = endDate - currentTime;
+let countdownIntervalId;
 
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        document.getElementById('start-btn').disabled = false;
-        return;
-      }
+selectors.buttonStart.addEventListener('click', startCountdown);
 
-      const { days, hours, minutes, seconds } = convertMs(timeLeft);
+function startCountdown() {
+  const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
+  if (selectedDate) {
+    selectors.buttonStart.disabled = true;
+    clearInterval(countdownIntervalId);
+    countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);
+    updateCountdown(selectedDate); // Викликаємо один раз, щоб не очікувати секунду до першого оновлення
+  }
+}
 
-      const formattedTime = `${addLeadingZero(days)}:${addLeadingZero(hours)}:${addLeadingZero(minutes)}:${addLeadingZero(seconds)}`;
-      document.getElementById('timer').textContent = formattedTime;
-    }
+function updateCountdown(targetDate) {
+  const timeRemaining = targetDate - new Date();
+  if (timeRemaining <= 0) {
+    clearInterval(countdownIntervalId);
+    displayCountdown(0, 0, 0, 0);
+    return;
+  }
 
-    // Обробник кліку на кнопку "Start"
-    function startTimer() {
-      const selectedDate = new Date(document.getElementById('datetime-picker').value).getTime();
-      const currentDate = new Date().getTime();
+  const { days, hours, minutes, seconds } = convertMs(timeRemaining);
+  displayCountdown(days, hours, minutes, seconds);
+}
 
-      if (selectedDate <= currentDate) {
-        // Вибрано неприпустиму дату
-        Notiflix.Notify.failure('Please choose a date in the future');
-        return;
-      }
+function displayCountdown(days, hours, minutes, seconds) {
+  selectors.days.textContent = addLeadingZero(days);
+  selectors.hours.textContent = addLeadingZero(hours);
+  selectors.minutes.textContent = addLeadingZero(minutes);
+  selectors.seconds.textContent = addLeadingZero(seconds);
+}
 
-      document.getElementById('start-btn').disabled = true;
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-      const endDate = new Date(selectedDate);
-      // Оновлювати таймер кожну секунду
-      timerInterval = setInterval(() => updateTimer(endDate), 1000);
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-      Notiflix.Notify.success('Timer started!');
-    }
+  return { days, hours, minutes, seconds };
+}
 
-    // Ініціалізація бібліотеки flatpickr
-    const picker = flatpickr("#datetime-picker", {
-      enableTime: true,
-      time_24hr: true,
-      defaultDate: new Date(),
-      minuteIncrement: 1,
-      onClose(selectedDates) {
-        const selectedDate = new Date(selectedDates[0]).getTime();
-        const currentDate = new Date().getTime();
-        if (selectedDate > currentDate) {
-          document.getElementById('start-btn').disabled = false;
-        } else {
-          document.getElementById('start-btn').disabled = true;
-        }
-      },
-    });
-
-    // Додавання обробника кліку на кнопку "Start"
-    document.getElementById('start-btn').addEventListener('click', startTimer);
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}

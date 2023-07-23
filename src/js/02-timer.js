@@ -1,7 +1,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-function addLeadingZero(value) {
+ function addLeadingZero(value) {
       return value.toString().padStart(2, '0');
     }
 
@@ -24,7 +24,7 @@ function addLeadingZero(value) {
       return { days, hours, minutes, seconds };
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function (event) {
       const datePicker = document.getElementById("datetime-picker");
       const startButton = document.querySelector("[data-start]");
       const daysValue = document.querySelector("[data-days]");
@@ -32,28 +32,7 @@ function addLeadingZero(value) {
       const minutesValue = document.querySelector("[data-minutes]");
       const secondsValue = document.querySelector("[data-seconds]");
 
-      let countdownInterval;
-
-      const options = {
-        enableTime: true,
-        time_24hr: true,
-        defaultDate: new Date(),
-        minuteIncrement: 1,
-        onClose(selectedDates) {
-          const selectedDate = selectedDates[0];
-
-          if (selectedDate < new Date()) {
-            window.alert("Please choose a date in the future");
-            startButton.disabled = true;
-          } else {
-            startButton.disabled = false;
-          }
-        },
-      };
-
-      flatpickr("#datetime-picker", options);
-
-      startButton.addEventListener("click", function () {
+      if (event.target === startButton) {
         const selectedDate = new Date(datePicker.value).getTime();
 
         function updateTimer() {
@@ -76,7 +55,25 @@ function addLeadingZero(value) {
         }
 
         updateTimer();
-      });
+      }
     });
 
-    
+    const options = {
+      enableTime: true,
+      time_24hr: true,
+      defaultDate: new Date(),
+      minuteIncrement: 1,
+      onClose(selectedDates) {
+        const selectedDate = selectedDates[0];
+        const startButton = document.querySelector("[data-start]");
+
+        if (selectedDate < new Date()) {
+          window.alert("Please choose a date in the future");
+          startButton.disabled = true;
+        } else {
+          startButton.disabled = false;
+        }
+      },
+    };
+
+    flatpickr("#datetime-picker", options);

@@ -20,7 +20,7 @@ flatpickr("#datetime-picker", {
     const selectedDate = selectedDates[0];
     if (selectedDate) {
       const currentDate = new Date();
-      currentDate.setHours(23, 59, 59, 999); // Встановлюємо максимальний час для поточної дати
+      currentDate.setHours(0, 0, 0, 0); // Встановлюємо початок дня для поточної дати
       if (selectedDate <= currentDate) {
         window.alert("Please choose a date and time in the future");
         selectors.buttonStart.disabled = true;
@@ -38,6 +38,13 @@ selectors.buttonStart.addEventListener('click', startCountdown);
 function startCountdown() {
   const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
   if (selectedDate) {
+    const currentDate = new Date();
+    currentDate.setSeconds(0); // Обнулюємо секунди для поточного часу
+    if (selectedDate <= currentDate) {
+      window.alert("Please choose a date and time in the future");
+      selectors.buttonStart.disabled = true;
+      return;
+    }
     selectors.buttonStart.disabled = true;
     clearInterval(countdownIntervalId);
     countdownIntervalId = setInterval(updateCountdown, 1000, selectedDate);

@@ -20,8 +20,9 @@ flatpickr("#datetime-picker", {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-    if (selectedDate <= new Date()) {
-      window.alert("Please choose a date and time in the future");
+    const currentDate = new Date();
+    if (selectedDate <= currentDate) {
+      window.alert("Please choose a date in the future");
       selectors.buttonStart.disabled = true;
     } else {
       selectors.buttonStart.disabled = false;

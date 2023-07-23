@@ -31,10 +31,13 @@ flatpickr("#datetime-picker", {
         selectors.buttonStart.disabled = false;
         clearInterval(countdownIntervalId);
         countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-        updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
+        updateCountdown(timeRemaining); 
       } else {
-        window.alert("Please choose a future date and time");
-        selectors.buttonStart.disabled = true;
+        const timeRemaining = selectedDate - now;
+        selectors.buttonStart.disabled = false;
+        clearInterval(countdownIntervalId);
+        countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
+        updateCountdown(timeRemaining); 
       }
     }
   },
@@ -49,7 +52,7 @@ function startCountdown() {
     const timeRemaining = selectedDate - new Date();
     clearInterval(countdownIntervalId);
     countdownIntervalId = setInterval(() => updateCountdown(timeRemaining), 1000);
-    updateCountdown(timeRemaining); // Викликаємо один раз, щоб відображення було зразу
+    updateCountdown(timeRemaining); 
   }
 }
 
@@ -71,20 +74,3 @@ function displayCountdown(days, hours, minutes, seconds) {
   selectors.seconds.textContent = addLeadingZero(seconds);
 }
 
-function convertMs(ms) {
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-
-  const days = Math.floor(ms / day);
-  const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-  return { days, hours, minutes, seconds };
-}
-
-function addLeadingZero(value) {
-  return value.toString().padStart(2, '0');
-}
